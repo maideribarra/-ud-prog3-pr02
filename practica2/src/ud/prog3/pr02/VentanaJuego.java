@@ -17,11 +17,17 @@ public class VentanaJuego extends JFrame {
 	MundoJuego miMundo;        // Mundo del juego
 	CocheJuego miCoche;        // Coche del juego
 	MiRunnable miHilo = null;  // Hilo del bucle principal de juego	
+	Boolean [] Teclas=new Boolean[4];
 
 	/** Constructor de la ventana de juego. Crea y devuelve la ventana inicializada
 	 * sin coches dentro
 	 */
 	public VentanaJuego() {
+		//Inicializar Teclas
+		Teclas[0]=false;
+		Teclas[1]=false;
+		Teclas[2]=false;
+		Teclas[3]=false;
 		// Liberación de la ventana por defecto al cerrar
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		// Creación contenedores y componentes
@@ -36,68 +42,112 @@ public class VentanaJuego extends JFrame {
 		pPrincipal.setBackground( Color.white );
 		// Añadido de componentes a contenedores
 		add( pPrincipal, BorderLayout.CENTER );
-		pBotonera.add( bAcelerar );
-		pBotonera.add( bFrenar );
-		pBotonera.add( bGiraIzq );
-		pBotonera.add( bGiraDer );
+//		pBotonera.add( bAcelerar );
+//		pBotonera.add( bFrenar );
+//		pBotonera.add( bGiraIzq );
+//		pBotonera.add( bGiraDer );
 		add( pBotonera, BorderLayout.SOUTH );
 		// Formato de ventana
 		setSize( 1000, 750 );
 		setResizable( false );
 		// Escuchadores de botones
-		bAcelerar.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				miCoche.acelera( +10, 1 );
-				// System.out.println( "Nueva velocidad de coche: " + miCoche.getVelocidad() );
-			}
-		});
-		bFrenar.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				miCoche.acelera( -10, 1 );
-				// System.out.println( "Nueva velocidad de coche: " + miCoche.getVelocidad() );
-			}
-		});
-		bGiraIzq.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				miCoche.gira( +10 );
-				// System.out.println( "Nueva dirección de coche: " + miCoche.getDireccionActual() );
-			}
-		});
-		bGiraDer.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				miCoche.gira( -10 );
-				// System.out.println( "Nueva dirección de coche: " + miCoche.getDireccionActual() );
-			}
-		});
+//		bAcelerar.addActionListener( new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				miCoche.acelera( +10, 1 );
+//				// System.out.println( "Nueva velocidad de coche: " + miCoche.getVelocidad() );
+//			}
+//		});
+//		bFrenar.addActionListener( new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				miCoche.acelera( -10, 1 );
+//				// System.out.println( "Nueva velocidad de coche: " + miCoche.getVelocidad() );
+//			}
+//		});
+//		bGiraIzq.addActionListener( new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				miCoche.gira( +10 );
+//				// System.out.println( "Nueva dirección de coche: " + miCoche.getDireccionActual() );
+//			}
+//		});
+//		bGiraDer.addActionListener( new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				miCoche.gira( -10 );
+//				// System.out.println( "Nueva dirección de coche: " + miCoche.getDireccionActual() );
+//			}
+//		});
 		
 		// Añadido para que también se gestione por teclado con el KeyListener
+//		pPrincipal.addKeyListener( new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				switch (e.getKeyCode()) {
+//					case KeyEvent.VK_UP: {
+//						miCoche.acelera( +5, 1 );
+//						break;
+//					}
+//					case KeyEvent.VK_DOWN: {
+//						miCoche.acelera( -5, 1 );
+//						break;
+//					}
+//					case KeyEvent.VK_LEFT: {
+//						miCoche.gira( +10 );
+//						break;
+//					}
+//					case KeyEvent.VK_RIGHT: {
+//						miCoche.gira( -10 );
+//						break;
+//					}
+//				}
+//			}
+//		});
 		pPrincipal.addKeyListener( new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				switch (e.getKeyCode()) {
-					case KeyEvent.VK_UP: {
-						miCoche.acelera( +5, 1 );
-						break;
-					}
-					case KeyEvent.VK_DOWN: {
-						miCoche.acelera( -5, 1 );
-						break;
-					}
-					case KeyEvent.VK_LEFT: {
-						miCoche.gira( +10 );
-						break;
-					}
-					case KeyEvent.VK_RIGHT: {
-						miCoche.gira( -10 );
-						break;
-					}
+			
+				if(e.getKeyCode()==KeyEvent.VK_UP){
+					Teclas[0]=true;
+					
 				}
+				if(e.getKeyCode()==KeyEvent.VK_DOWN){
+					Teclas[1]=true;
+					
+				}
+				if(e.getKeyCode()==KeyEvent.VK_LEFT){
+					Teclas[2]=true;
+					
+				}
+				if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+					Teclas[3]=true;
+					
+				}
+				
+			}
+			public void keyReleased(KeyEvent f){
+				if(f.getKeyCode()==KeyEvent.VK_UP){
+					Teclas[0]=false;
+					
+				}
+				if(f.getKeyCode()==KeyEvent.VK_DOWN){
+					Teclas[1]=false;
+					
+				}
+				if(f.getKeyCode()==KeyEvent.VK_LEFT){
+					Teclas[2]=false;
+					
+				}
+				if(f.getKeyCode()==KeyEvent.VK_RIGHT){
+					Teclas[3]=false;
+					
+				}
+		
 			}
 		});
+
+		
 		pPrincipal.setFocusable(true);
 		pPrincipal.requestFocus();
 		pPrincipal.addFocusListener( new FocusAdapter() {
@@ -159,6 +209,33 @@ public class VentanaJuego extends JFrame {
 					miMundo.rebotaHorizontal(miCoche);
 				if (miMundo.hayChoqueVertical(miCoche)) // Espejo vertical si choca en Y
 					miMundo.rebotaVertical(miCoche);
+				//Mirar que teclas de control estan pulsadas y actuar
+				
+				if (Teclas[0]==true){
+					miCoche.acelera( +5, 1 );
+					System.out.println("acelerando");
+					
+				}
+				if (Teclas[1]==true) {
+					miCoche.acelera( -5, 1 );
+					System.out.println("decelerando");
+					
+					
+				}
+				if (Teclas[2]==true) {
+					miCoche.gira( +10 );
+					System.out.println("giraderecha");
+					
+					
+				}
+				if (Teclas[3]==true) {
+					miCoche.gira( -10 );
+					System.out.println("giraizquierda");
+					
+					
+				}
+			
+				
 				// Dormir el hilo 40 milisegundos
 				try {
 					Thread.sleep( 40 );
