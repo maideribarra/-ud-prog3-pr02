@@ -18,6 +18,8 @@ public class VentanaJuego extends JFrame {
 	CocheJuego miCoche;        // Coche del juego
 	MiRunnable miHilo = null;  // Hilo del bucle principal de juego	
 	Boolean [] Teclas=new Boolean[4];
+	Boolean andando=false;
+	double Fuerza=-1;
 
 	/** Constructor de la ventana de juego. Crea y devuelve la ventana inicializada
 	 * sin coches dentro
@@ -129,10 +131,12 @@ public class VentanaJuego extends JFrame {
 			public void keyReleased(KeyEvent f){
 				if(f.getKeyCode()==KeyEvent.VK_UP){
 					Teclas[0]=false;
+					andando=true;
 					
 				}
 				if(f.getKeyCode()==KeyEvent.VK_DOWN){
 					Teclas[1]=false;
+					andando=true;
 					
 				}
 				if(f.getKeyCode()==KeyEvent.VK_LEFT){
@@ -212,12 +216,15 @@ public class VentanaJuego extends JFrame {
 				//Mirar que teclas de control estan pulsadas y actuar
 				
 				if (Teclas[0]==true){
-					miCoche.acelera( +5, 1 );
+					//miCoche.acelera( +5, 1 );
+					miMundo.aplicarFuerza( miCoche.fuerzaAceleracionAdelante(),miCoche );
+					miCoche.setVelocidad(miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAdelante(), miCoche.masa), 0.040));
 					System.out.println("acelerando");
 					
 				}
 				if (Teclas[1]==true) {
-					miCoche.acelera( -5, 1 );
+					miMundo.aplicarFuerza( miCoche.fuerzaAceleracionAtras(),miCoche );
+					miCoche.setVelocidad(miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAdelante(), miCoche.masa), 0.040));
 					System.out.println("decelerando");
 					
 					
@@ -232,6 +239,26 @@ public class VentanaJuego extends JFrame {
 					miCoche.gira( -10 );
 					System.out.println("giraizquierda");
 					
+					
+				}
+				if ((Teclas[0]==false && Teclas[1]==false) && andando==true){
+					System.out.println("he entrado");
+					if (Fuerza ==-1){
+						Fuerza=miCoche.fuerzaAceleracionAdelante();
+					}
+					if (Fuerza<=0){
+						miCoche.setVelocidad(0.0);
+						
+						System.out.println("me voy a parar");
+						andando=false;
+						Fuerza=-1;
+					}
+					else{
+						
+						Fuerza=Fuerza+miMundo.calcFuerzaRozamiento( miCoche.getMasa() ,miCoche.getCoefRSuelo(),miCoche.getCoefRAire(), miCoche.getVelocidad() );
+						miCoche.setVelocidad(miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(Fuerza, miCoche.masa), 0.040));
+						
+					}
 					
 				}
 			

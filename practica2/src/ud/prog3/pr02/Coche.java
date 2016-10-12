@@ -10,9 +10,27 @@ public class Coche {
 	protected double posX;  // Posición en X (horizontal)
 	protected double posY;  // Posición en Y (vertical)
 	protected String piloto;  // Nombre de piloto
+	protected double masa=1;
+	protected double coefRSuelo=15.5;
+	protected double coefRAire=0.35;
+	protected double FUERZA_BASE_ADELANTE=2000;
+	protected double FUERZA_BASE_ATRAS=1000;
+	
 	
 	// Constructores
 	
+	public double getMasa() {
+		return masa;
+	}
+
+	public double getCoefRSuelo() {
+		return coefRSuelo;
+	}
+
+	public double getCoefRAire() {
+		return coefRAire;
+	}
+
 	public Coche() {
 		miVelocidad = 0;
 		miDireccionActual = 0;
@@ -103,4 +121,32 @@ public class Coche {
 		return piloto + " (" + posX + "," + posY + ") - " +
 			   "Velocidad: " + miVelocidad + " ## Dirección: " + miDireccionActual; 
 	}
+	
+	/** Devuelve la fuerza de aceleración del coche, de acuerdo al motor definido en la práctica 2  
+	  * @return Fuerza de aceleración en Newtixels   
+	  */  
+	public double fuerzaAceleracionAdelante() {   
+		if (miVelocidad<=-150) return FUERZA_BASE_ADELANTE;   
+		else if (miVelocidad<=0)     
+			return FUERZA_BASE_ADELANTE*(-miVelocidad/150*0.5+0.5);  
+		else if (miVelocidad<=250)   
+			return FUERZA_BASE_ADELANTE*(miVelocidad/250*0.5+0.5);   
+		else if (miVelocidad<=250)    
+			return FUERZA_BASE_ADELANTE*(miVelocidad/250*0.5+0.5);  
+		else if (miVelocidad<=750)   
+			return FUERZA_BASE_ADELANTE;   
+		else return FUERZA_BASE_ADELANTE*(-(miVelocidad-1000)/250);  
+		}
+	
+	public double fuerzaAceleracionAtras() {   
+		if (miVelocidad<=-350) 
+			return FUERZA_BASE_ATRAS*((miVelocidad+500)/150);      
+		else if (miVelocidad<=-200)     
+			return FUERZA_BASE_ATRAS;  
+		else if (miVelocidad<=0)   
+			return FUERZA_BASE_ATRAS*(((miVelocidad*(-0.7))+60)/200);   
+		else if (miVelocidad<=250)    
+			return FUERZA_BASE_ATRAS*(((0.55*miVelocidad)+75)/250);  
+		else return FUERZA_BASE_ATRAS*0.85;  
+		}
 }

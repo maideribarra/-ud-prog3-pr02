@@ -108,4 +108,35 @@ public class MundoJuego {
 		return vel + (acel*tiempo);
 	}
 	
+	public static double calcFuerzaRozamiento( double masa, double coefRozSuelo, double coefRozAire, double vel ) {
+		double fuerzaRozamientoAire = coefRozAire * (-vel);  // En contra del movimiento  
+		double fuerzaRozamientoSuelo = masa * coefRozSuelo * ((vel>0)?(-1):1);  // Contra mvto   
+		return fuerzaRozamientoAire + fuerzaRozamientoSuelo; 
+		
+	}
+	
+	public static double calcAceleracionConFuerza( double fuerza, double masa ) {   
+		// 2ª ley de Newton: F = m*a --->  a = F/m   
+		return fuerza/masa;  
+		}
+	
+	public static void aplicarFuerza( double fuerza, Coche Coche )	{  
+		double fuerzaRozamiento = calcFuerzaRozamiento( Coche.getMasa() ,Coche.getCoefRSuelo(), Coche.getCoefRAire(), Coche.getVelocidad() );  
+		double aceleracion = calcAceleracionConFuerza( fuerza+fuerzaRozamiento, Coche.getMasa() );   
+		if (fuerza==0) {    // No hay fuerza, solo se aplica el rozamiento   
+			double velAntigua = Coche.getVelocidad();    
+			Coche.acelera( aceleracion, 0.04 );    
+			if (velAntigua>=0 && Coche.getVelocidad()<0 || velAntigua<=0 && Coche.getVelocidad()>0) {      
+				Coche.setVelocidad(0);  // Si se está frenando, se para (no anda al revés)    
+				}  
+		} 
+		else {    
+			Coche.acelera( aceleracion, 0.04 );
+		}
+				
+	
+			}
+	
+		
+	
 }
