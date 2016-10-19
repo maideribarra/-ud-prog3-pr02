@@ -140,13 +140,13 @@ public class Coche {
 	
 	public double fuerzaAceleracionAtras() {   
 		if (miVelocidad<=-350) 
-			return FUERZA_BASE_ATRAS*((miVelocidad+500)/150);      
+			return -1*FUERZA_BASE_ATRAS*((miVelocidad+500)/150);      
 		else if (miVelocidad<=-200)     
-			return FUERZA_BASE_ATRAS;  
+			return -1*FUERZA_BASE_ATRAS;  
 		else if (miVelocidad<=0)   
-			return FUERZA_BASE_ATRAS*(((miVelocidad*(-0.7))+60)/200);   
+			return -1*FUERZA_BASE_ATRAS*(((miVelocidad*(-0.7))+60)/200);   
 		else if (miVelocidad<=250)    
-			return FUERZA_BASE_ATRAS*(((0.55*miVelocidad)+75)/250);  
-		else return FUERZA_BASE_ATRAS*0.85;  
+			return -1*FUERZA_BASE_ATRAS*(((0.55*miVelocidad)+75)/250);  
+		else return -1*FUERZA_BASE_ATRAS*0.85;  
 		}
 }

@@ -3,6 +3,8 @@ package ud.prog3.pr02;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.*;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 
@@ -25,6 +27,7 @@ public class VentanaJuego extends JFrame {
 	 * sin coches dentro
 	 */
 	public VentanaJuego() {
+		System.out.println("a");
 		//Inicializar Teclas
 		Teclas[0]=false;
 		Teclas[1]=false;
@@ -32,6 +35,8 @@ public class VentanaJuego extends JFrame {
 		Teclas[3]=false;
 		// Liberación de la ventana por defecto al cerrar
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+		System.out.println("b");
+		
 		// Creación contenedores y componentes
 		pPrincipal = new JPanel();
 		JPanel pBotonera = new JPanel();
@@ -173,26 +178,35 @@ public class VentanaJuego extends JFrame {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// Crea y visibiliza la ventana con el coche
+		final VentanaJuego miVentana = new VentanaJuego();
 		try {
-			final VentanaJuego miVentana = new VentanaJuego();
 			SwingUtilities.invokeAndWait( new Runnable() {
 				@Override
 				public void run() {
+					System.out.println("run");
 					miVentana.setVisible( true );
 				}
 			});
-			miVentana.miMundo = new MundoJuego( miVentana.pPrincipal );
-			miVentana.miMundo.creaCoche( 150, 100 );
-			miVentana.miCoche = miVentana.miMundo.getCoche();
-			miVentana.miCoche.setPiloto( "Fernando Alonso" );
-			// Crea el hilo de movimiento del coche y lo lanza
-			miVentana.miHilo = miVentana.new MiRunnable();  // Sintaxis de new para clase interna
-			Thread nuevoHilo = new Thread( miVentana.miHilo );
-			nuevoHilo.start();
-		} catch (Exception e) {
-			System.exit(1);  // Error anormal
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		System.out.println("run+1");
+		miVentana.miMundo = new MundoJuego( miVentana.pPrincipal );
+		System.out.println("run+2");
+		miVentana.miMundo.creaCoche( 150, 100 );
+		miVentana.miCoche = miVentana.miMundo.getCoche();
+		miVentana.miCoche.setPiloto( "Fernando Alonso" );
+		// Crea el hilo de movimiento del coche y lo lanza
+		System.out.println("bien1");
+		miVentana.miHilo = miVentana.new MiRunnable();  // Sintaxis de new para clase interna
+		System.out.println("bien2");
+		Thread nuevoHilo = new Thread( miVentana.miHilo );
+		System.out.println("bien3");
+		nuevoHilo.start();
 	}
 	
 	/** Clase interna para implementación de bucle principal del juego como un hilo
@@ -224,7 +238,7 @@ public class VentanaJuego extends JFrame {
 				}
 				if (Teclas[1]==true) {
 					miMundo.aplicarFuerza( miCoche.fuerzaAceleracionAtras(),miCoche );
-					miCoche.setVelocidad(-1*miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAtras(), miCoche.masa), 0.040));
+					miCoche.setVelocidad(miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAtras(), miCoche.masa), 0.040));
 					
 					
 					
@@ -248,6 +262,8 @@ public class VentanaJuego extends JFrame {
 						andando=false;
 					}
 				}
+				miMundo.creaEstrella();
+				miMundo.quitaYRotaEstrellas(6000);
 				
 			
 				

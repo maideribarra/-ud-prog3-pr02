@@ -1,5 +1,7 @@
 package ud.prog3.pr02;
 
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 /** "Mundo" del juego del coche.
@@ -11,11 +13,14 @@ import javax.swing.JPanel;
 public class MundoJuego {
 	private JPanel panel;  // panel visual del juego
 	CocheJuego miCoche;    // Coche del juego
+	private ArrayList <JLabelEstrella> Cielo=new ArrayList <JLabelEstrella>();
+	private long TiempoCreacionUltEstrella;
 	
 	/** Construye un mundo de juego
 	 * @param panel	Panel visual del juego
 	 */
 	public MundoJuego( JPanel panel ) {
+		System.out.println("mundo");
 		this.panel = panel;
 	}
 
@@ -136,6 +141,74 @@ public class MundoJuego {
 				
 	
 			}
+	public long getTiempoCreacionUltEstrella() {
+		TiempoCreacionUltEstrella=Cielo.get(Cielo.size()-1).getFechaCreacion();
+		return TiempoCreacionUltEstrella;
+	}
+
+	public void setTiempoCreacionUltEstrella(long tiempoCreacionUltEstrella) {
+		TiempoCreacionUltEstrella = tiempoCreacionUltEstrella;
+	}
+
+	/** Si han pasado más de 1,2 segundos desde la última, 
+	 *   * crea una estrella nueva en una posición aleatoria y la añade al mundo y al panel visual 
+	 *   */ 
+	public void creaEstrella() {
+		double tiempoActual=System.currentTimeMillis();
+		if(Cielo.size()>0){
+		if((System.currentTimeMillis()-getTiempoCreacionUltEstrella())>1200){
+			System.out.println("entro");
+			JLabelEstrella EstrellaNueva= new JLabelEstrella();
+			Cielo.add(Cielo.size(), EstrellaNueva);
+			int posx =(int)(Math.random()*1000);
+			int posy =(int)(Math.random()*1000);
+//			double posy;
+//			double p=Math.random()*1000;
+//			if (p<750){
+//				posy=p;
+//			}else{
+//				posy=p-250;
+//			}
+			this.panel.add(EstrellaNueva);
+			EstrellaNueva.setLocation(posx, posy);
+
+		}
+		
+		}else{
+			int posx =(int)(Math.random()*1000);
+			int posy =(int)(Math.random()*1000);
+			JLabelEstrella EstrellaNueva= new JLabelEstrella();
+			Cielo.add(Cielo.size(), EstrellaNueva);
+			int pos =(int)(Math.random()*1000);
+			System.out.println(pos);
+			this.panel.add(EstrellaNueva);
+			EstrellaNueva.setLocation(posx, posy);
+		}
+		this.panel.repaint();
+		
+	}
+	/** Quita todas las estrellas que lleven en pantalla demasiado tiempo  
+	 *  * y rota 10 grados las que sigan estando   
+	 * * @param maxTiempo Tiempo máximo para que se mantengan las estrellas (msegs)  
+	 *  * @return Número de estrellas quitadas */ 
+	public int quitaYRotaEstrellas( long maxTiempo ) {
+		int i=0;
+		int c=0;
+		JLabelEstrella estrellita=Cielo.get(i);
+		while((System.currentTimeMillis()-estrellita.getFechaCreacion())<maxTiempo){
+			Cielo.remove(estrellita);
+			this.panel.remove(estrellita);
+			
+			estrellita=Cielo.get(i);
+			c=c+1;
+		}
+		
+		for(int j=0;j<Cielo.size();j++){
+			Cielo.get(j).gira(Cielo.get(j).getRadioEsferaEstrella());
+		}
+		this.panel.repaint();
+		return c;
+}
 	
 		
 	
