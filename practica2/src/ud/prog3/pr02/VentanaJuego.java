@@ -19,7 +19,7 @@ public class VentanaJuego extends JFrame {
 	MiRunnable miHilo = null;  // Hilo del bucle principal de juego	
 	Boolean [] Teclas=new Boolean[4];
 	Boolean andando=false;
-	double Fuerza=-1;
+	double aceleracion=0;
 
 	/** Constructor de la ventana de juego. Crea y devuelve la ventana inicializada
 	 * sin coches dentro
@@ -219,48 +219,36 @@ public class VentanaJuego extends JFrame {
 					//miCoche.acelera( +5, 1 );
 					miMundo.aplicarFuerza( miCoche.fuerzaAceleracionAdelante(),miCoche );
 					miCoche.setVelocidad(miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAdelante(), miCoche.masa), 0.040));
-					System.out.println("acelerando");
+					
 					
 				}
 				if (Teclas[1]==true) {
 					miMundo.aplicarFuerza( miCoche.fuerzaAceleracionAtras(),miCoche );
-					miCoche.setVelocidad(miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAdelante(), miCoche.masa), 0.040));
-					System.out.println("decelerando");
+					miCoche.setVelocidad(-1*miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(miCoche.fuerzaAceleracionAtras(), miCoche.masa), 0.040));
+					
 					
 					
 				}
 				if (Teclas[2]==true) {
 					miCoche.gira( +10 );
-					System.out.println("giraderecha");
+					
 					
 					
 				}
 				if (Teclas[3]==true) {
 					miCoche.gira( -10 );
-					System.out.println("giraizquierda");
+					
 					
 					
 				}
+
 				if ((Teclas[0]==false && Teclas[1]==false) && andando==true){
-					System.out.println("he entrado");
-					if (Fuerza ==-1){
-						Fuerza=miCoche.fuerzaAceleracionAdelante();
-					}
-					if (Fuerza<=0){
-						miCoche.setVelocidad(0.0);
-						
-						System.out.println("me voy a parar");
+					miMundo.aplicarFuerza( 0,miCoche );
+					if(miCoche.getVelocidad()==0){
 						andando=false;
-						Fuerza=-1;
 					}
-					else{
-						
-						Fuerza=Fuerza+miMundo.calcFuerzaRozamiento( miCoche.getMasa() ,miCoche.getCoefRSuelo(),miCoche.getCoefRAire(), miCoche.getVelocidad() );
-						miCoche.setVelocidad(miMundo.calcVelocidadConAceleracion(miCoche.getVelocidad(), miMundo.calcAceleracionConFuerza(Fuerza, miCoche.masa), 0.040));
-						
-					}
-					
 				}
+				
 			
 				
 				// Dormir el hilo 40 milisegundos
