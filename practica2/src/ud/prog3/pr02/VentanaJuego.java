@@ -16,18 +16,19 @@ import javax.swing.*;
 public class VentanaJuego extends JFrame {
 	private static final long serialVersionUID = 1L;  // Para serialización
 	JPanel pPrincipal;         // Panel del juego (layout nulo)
+	JLabel lMensaje=new JLabel();
 	MundoJuego miMundo;        // Mundo del juego
 	CocheJuego miCoche;        // Coche del juego
 	MiRunnable miHilo = null;  // Hilo del bucle principal de juego	
 	Boolean [] Teclas=new Boolean[4];
 	Boolean andando=false;
 	double aceleracion=0;
+	int numEstrellas=0;
 
 	/** Constructor de la ventana de juego. Crea y devuelve la ventana inicializada
 	 * sin coches dentro
 	 */
 	public VentanaJuego() {
-		System.out.println("a");
 		//Inicializar Teclas
 		Teclas[0]=false;
 		Teclas[1]=false;
@@ -35,7 +36,7 @@ public class VentanaJuego extends JFrame {
 		Teclas[3]=false;
 		// Liberación de la ventana por defecto al cerrar
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-		System.out.println("b");
+		
 		
 		// Creación contenedores y componentes
 		pPrincipal = new JPanel();
@@ -53,7 +54,7 @@ public class VentanaJuego extends JFrame {
 //		pBotonera.add( bFrenar );
 //		pBotonera.add( bGiraIzq );
 //		pBotonera.add( bGiraDer );
-		add( pBotonera, BorderLayout.SOUTH );
+		add( lMensaje, BorderLayout.SOUTH );
 		// Formato de ventana
 		setSize( 1000, 750 );
 		setResizable( false );
@@ -183,7 +184,7 @@ public class VentanaJuego extends JFrame {
 			SwingUtilities.invokeAndWait( new Runnable() {
 				@Override
 				public void run() {
-					System.out.println("run");
+					
 					miVentana.setVisible( true );
 				}
 			});
@@ -194,18 +195,18 @@ public class VentanaJuego extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("run+1");
+	
 		miVentana.miMundo = new MundoJuego( miVentana.pPrincipal );
-		System.out.println("run+2");
+		
 		miVentana.miMundo.creaCoche( 150, 100 );
 		miVentana.miCoche = miVentana.miMundo.getCoche();
 		miVentana.miCoche.setPiloto( "Fernando Alonso" );
 		// Crea el hilo de movimiento del coche y lo lanza
-		System.out.println("bien1");
+		
 		miVentana.miHilo = miVentana.new MiRunnable();  // Sintaxis de new para clase interna
-		System.out.println("bien2");
+		
 		Thread nuevoHilo = new Thread( miVentana.miHilo );
-		System.out.println("bien3");
+		
 		nuevoHilo.start();
 	}
 	
@@ -264,7 +265,12 @@ public class VentanaJuego extends JFrame {
 				}
 				miMundo.creaEstrella();
 				miMundo.quitaYRotaEstrellas(6000);
-				
+				EscribirLabel();
+				if(miMundo.getEstrellasBorradas()>10){
+					miHilo.acaba();
+					setVisible(false);
+					System.exit(0);
+				}
 			
 				
 				// Dormir el hilo 40 milisegundos
@@ -280,5 +286,17 @@ public class VentanaJuego extends JFrame {
 			sigo = false;
 		}
 	};
+	public void EscribirLabel(){
+		int numEst=miMundo.choquesConEstrellas();
+		numEstrellas=numEst+numEstrellas;
+		if (numEstrellas>0){
+			
+			lMensaje.setText("Has pillado"+numEstrellas+"estrellas. Tienes "+numEstrellas*5+"puntos");
+			
+		}else{
+			lMensaje.setText("Ohh todavia no has pillado ninguna estrella");
+		}
+		
+	}
 	
 }

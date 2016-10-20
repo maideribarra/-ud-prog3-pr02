@@ -15,12 +15,26 @@ public class MundoJuego {
 	CocheJuego miCoche;    // Coche del juego
 	private ArrayList <JLabelEstrella> Cielo=new ArrayList <JLabelEstrella>();
 	private long TiempoCreacionUltEstrella;
+	private int estrellasBorradas=0;
+	private int estrellasPilladas=0;
 	
+	public int getEstrellasBorradas() {
+		return estrellasBorradas;
+	}
+
+	
+
+	public int getEstrellasPilladas() {
+		return estrellasPilladas;
+	}
+
+	
+
 	/** Construye un mundo de juego
 	 * @param panel	Panel visual del juego
 	 */
 	public MundoJuego( JPanel panel ) {
-		System.out.println("mundo");
+		
 		this.panel = panel;
 	}
 
@@ -157,32 +171,29 @@ public class MundoJuego {
 		double tiempoActual=System.currentTimeMillis();
 		if(Cielo.size()>0){
 		if((System.currentTimeMillis()-getTiempoCreacionUltEstrella())>1200){
-			System.out.println("creo estrella");
-			System.out.println("entro");
+			
 			JLabelEstrella EstrellaNueva= new JLabelEstrella();
 			Cielo.add(Cielo.size(), EstrellaNueva);
 			int posx =(int)(Math.random()*1000);
 			int posy =(int)(Math.random()*1000);
-//			double posy;
-//			double p=Math.random()*1000;
-//			if (p<750){
-//				posy=p;
-//			}else{
-//				posy=p-250;
-//			}
+			while(posy>750){
+			posx =(int)(Math.random()*1000);
+			posy =(int)(Math.random()*1000);
+			}
+
 			this.panel.add(EstrellaNueva);
 			EstrellaNueva.setLocation(posx, posy);
 
 		}
 		
 		}else{
-			System.out.println("creo estrella");
+			
 			int posx =(int)(Math.random()*1000);
 			int posy =(int)(Math.random()*1000);
 			JLabelEstrella EstrellaNueva= new JLabelEstrella();
 			Cielo.add(Cielo.size(), EstrellaNueva);
 			int pos =(int)(Math.random()*1000);
-			System.out.println(pos);
+			
 			this.panel.add(EstrellaNueva);
 			EstrellaNueva.setLocation(posx, posy);
 		}
@@ -198,21 +209,44 @@ public class MundoJuego {
 		int c=0;		
 		for (int i=0;i<Cielo.size();i++){
 			if(System.currentTimeMillis()-Cielo.get(i).getFechaCreacion()>maxTiempo){
-				System.out.println("borrar estrella");
 				JLabelEstrella estrellita=Cielo.get(i);
 				Cielo.remove(estrellita);
 				this.panel.remove(estrellita);
+				estrellasBorradas=estrellasBorradas+1;
 				i=i-1;
 				c=c+1;
 			}
 		else{
 			Cielo.get(i).gira(10);
-			System.out.println("girando");
+			
 		}
 		}
 		this.panel.repaint();
 		return c;
 }
+	/** Calcula si hay choques del coche con alguna estrella (o varias). Se considera el choque si  
+	 *  * se tocan las esferas lógicas del coche y la estrella. Si es así, las elimina.  
+	 *   * @return Número de estrellas eliminadas 
+	 *     */ 
+	   
+	 public int choquesConEstrellas(){
+		 double xcentrocoche=miCoche.getPosX()+35+15;
+		 double ycentrocoche=miCoche.getPosY()+35+15;
+		 int c=0;
+		 for(int i=0;i<Cielo.size();i++){
+			 JLabelEstrella est=Cielo.get(i);
+			 double xcentroestr=est.getX()+17+3;
+			 double ycentroestr=est.getY()+17+3;
+			 if((Math.sqrt(((Math.abs(xcentroestr-xcentrocoche))*(Math.abs(xcentroestr-xcentrocoche)))+((Math.abs(ycentroestr-ycentrocoche))*(Math.abs(ycentroestr-ycentrocoche)))))<(17+35)){
+				this.panel.remove(est);
+				 Cielo.remove(est);					
+					c=c+1;
+					i=i-1;
+					estrellasPilladas=estrellasPilladas+1;
+			 }
+		 }
+		 return c;
+	 }
 	
 		
 	
