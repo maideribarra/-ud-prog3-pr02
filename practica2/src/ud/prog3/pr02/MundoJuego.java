@@ -157,6 +157,7 @@ public class MundoJuego {
 		double tiempoActual=System.currentTimeMillis();
 		if(Cielo.size()>0){
 		if((System.currentTimeMillis()-getTiempoCreacionUltEstrella())>1200){
+			System.out.println("creo estrella");
 			System.out.println("entro");
 			JLabelEstrella EstrellaNueva= new JLabelEstrella();
 			Cielo.add(Cielo.size(), EstrellaNueva);
@@ -175,6 +176,7 @@ public class MundoJuego {
 		}
 		
 		}else{
+			System.out.println("creo estrella");
 			int posx =(int)(Math.random()*1000);
 			int posy =(int)(Math.random()*1000);
 			JLabelEstrella EstrellaNueva= new JLabelEstrella();
@@ -192,19 +194,21 @@ public class MundoJuego {
 	 * * @param maxTiempo Tiempo máximo para que se mantengan las estrellas (msegs)  
 	 *  * @return Número de estrellas quitadas */ 
 	public int quitaYRotaEstrellas( long maxTiempo ) {
-		int i=0;
-		int c=0;
-		JLabelEstrella estrellita=Cielo.get(i);
-		while((System.currentTimeMillis()-estrellita.getFechaCreacion())<maxTiempo){
-			Cielo.remove(estrellita);
-			this.panel.remove(estrellita);
-			
-			estrellita=Cielo.get(i);
-			c=c+1;
-		}
 		
-		for(int j=0;j<Cielo.size();j++){
-			Cielo.get(j).gira(Cielo.get(j).getRadioEsferaEstrella());
+		int c=0;		
+		for (int i=0;i<Cielo.size();i++){
+			if(System.currentTimeMillis()-Cielo.get(i).getFechaCreacion()>maxTiempo){
+				System.out.println("borrar estrella");
+				JLabelEstrella estrellita=Cielo.get(i);
+				Cielo.remove(estrellita);
+				this.panel.remove(estrellita);
+				i=i-1;
+				c=c+1;
+			}
+		else{
+			Cielo.get(i).gira(10);
+			System.out.println("girando");
+		}
 		}
 		this.panel.repaint();
 		return c;
